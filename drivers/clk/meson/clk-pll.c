@@ -586,6 +586,15 @@ const struct clk_ops meson_clk_pll_ro_ops = {
 };
 EXPORT_SYMBOL_NS_GPL(meson_clk_pll_ro_ops, "CLK_MESON");
 
+const struct clk_ops meson_secure_clk_pll_ops = {
+	.recalc_rate	= meson_clk_pll_recalc_rate,
+	.round_rate	= meson_secure_clk_pll_round_rate,
+	.set_rate	= meson_secure_clk_pll_set_rate,
+	.enable		= meson_secure_clk_pll_enable,
+	.disable	= meson_secure_clk_pll_disable
+};
+EXPORT_SYMBOL_GPL(meson_secure_clk_pll_ops, "CLK_MESON");
+
 MODULE_DESCRIPTION("Amlogic PLL driver");
 MODULE_AUTHOR("Carlo Caione <carlo@endlessm.com>");
 MODULE_AUTHOR("Jerome Brunet <jbrunet@baylibre.com>");
