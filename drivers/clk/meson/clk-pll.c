@@ -34,6 +34,7 @@
 #include <linux/module.h>
 
 #include "clk-regmap.h"
+#include "clk-secure.h"
 #include "clk-pll.h"
 
 static inline struct meson_clk_pll_data *
