@@ -787,7 +787,7 @@ static const struct meson_msr_id clk_msr_s4[] = {
 
 };
 
-static struct meson_msr_id clk_msr_sc2[CLK_MSR_MAX] = {
+static const struct meson_msr_id clk_msr_sc2[] = {
 	CLK_MSR_ID(0, "cts_sys_clk"),
 	CLK_MSR_ID(1, "cts_axi_clk "),
 	CLK_MSR_ID(2, "cts_rtc_clk"),
