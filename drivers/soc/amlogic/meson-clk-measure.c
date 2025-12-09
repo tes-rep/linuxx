@@ -1155,6 +1155,12 @@ static const struct meson_msr_data clk_msr_s4_data = {
 	.reg = &msr_reg_offset_v2,
 };
 
+static const struct meson_msr_data clk_msr_sc2_data = {
+	.msr_table = (void *)clk_msr_sc2,
+	.msr_count = ARRAY_SIZE(clk_msr_sc2),
+	.reg = &msr_reg_offset_v2,
+};
+
 static const struct of_device_id meson_msr_match_table[] = {
 	{
 		.compatible = "amlogic,meson-gx-clk-measure",
@@ -1190,7 +1196,7 @@ static const struct of_device_id meson_msr_match_table[] = {
 	},
 	{ 
                 .compatible = "amlogic,meson-sc2-clk-measure",
-		.data = (void *)clk_msr_sc2,
+		.data = &clk_msr_sc2_data,
 	},
         {/* sentinel */ }
 };
