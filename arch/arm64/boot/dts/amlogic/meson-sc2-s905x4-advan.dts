@@ -3,8 +3,6 @@
  * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
  *
  * sibondt
- *
- * REVISI: Disesuaikan untuk 2 GiB RAM, Perbaikan sintaksis USB, Peninjauan VBUS.
  */
 
 /dts-v1/;
@@ -37,8 +35,7 @@
 
 	memory {
 		device_type = "memory";
-		/* 2 GiB RAM */
-		linux,usable-memory = <0x0 0x00000000 0x0 0x80000000>;
+		linux,usable-memory = <0x0 0x000000 0x0 0x80000000>;
 	};
 
 	chosen {
@@ -64,31 +61,29 @@
 		clock-names = "ext_clock";
 	};
 
-	/* Regulator yang tidak digunakan, dinonaktifkan untuk menghindari konflik dengan vusb_5v */
 	vdd_3v3: regulator-vdd_3v3 {
-		compatible = "regulator-fixed";
-		regulator-name = "VDD_3V3";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-	};
+                compatible = "regulator-fixed";
+                regulator-name = "VDD_3V3";
+                regulator-min-microvolt = <3300000>;
+                regulator-max-microvolt = <3300000>;
+        };
 
 	vdd_1v8: regulator-vdd_1v8 {
-		compatible = "regulator-fixed";
-		regulator-name = "VDD_1V8";
-		regulator-min-microvolt = <1800000>;
-		regulator-max-microvolt = <1800000>;
-	};
+                compatible = "regulator-fixed";
+                regulator-name = "VDD_1V8";
+                regulator-min-microvolt = <1800000>;
+                regulator-max-microvolt = <1800000>;
+        };
 
-	/* Regulator VBUS lama/alternatif, dinonaktifkan jika vusb_5v digunakan */
 	vbus_pwr: regulator-vbus_pwr {
 		compatible = "regulator-fixed";
 		regulator-name = "VBUS_PWR";
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
+//		vin-supply = <&vcc_5v>;
 
 		gpio = <&gpio GPIOH_6 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
-		status = "disabled"; /* Dinonaktifkan, vusb_5v yang dipakai */
 	};
 
 	reserved-memory {
@@ -187,7 +182,7 @@
 		compatible = "amlogic,cpufreq-meson";
 		status = "okay";
 	};
-
+	
 	i2c-led {
 		compatible = "i2c-gpio";
 		sda-gpios = <&gpio GPIOA_14 GPIO_ACTIVE_HIGH>;
@@ -406,7 +401,7 @@
 }; /* end of periphs_pinctrl */
 
 /* ───────────────────────────────────────────────
-	 * USB VBUS regulator (5V) - Menggunakan GPIO Always-On (AO)
+	 *  USB VBUS regulator (5V)
 	 * ─────────────────────────────────────────────── */
 	vusb_5v: regulator-vusb5v {
 		compatible = "regulator-fixed";
@@ -420,7 +415,8 @@
 	};
 
 	/* ───────────────────────────────────────────────
-	 * Disable PCIe - AX810/AT01 *tidak punya hardware*
+	 *  Disable PCIe — AX810/AT01 *tidak punya hardware*
+	 *  PCIe PHY aktif menyebabkan USB3 drop / connect-disconnect
 	 * ─────────────────────────────────────────────── */
 	&pcie_phy {
 		status = "disabled";
@@ -431,7 +427,7 @@
 	};
 
 /* ───────────────────────────────────────────────
-	 * USB2 PHY
+	 *  USB2 PHY
 	 * ─────────────────────────────────────────────── */
 	&usb2_phy0 {
 		phy-supply = <&vusb_5v>;
@@ -445,15 +441,14 @@
 	};
 
 	/* ───────────────────────────────────────────────
-	 * USB3 / PCIe Combo PHY → hanya mode USB3
+	 *  USB3 / PCIe Combo PHY → hanya mode USB3
 	 * ─────────────────────────────────────────────── */
 	&usb3_pcie_phy {
 		status = "okay";
-		amlogic,pcie-disable;	 /* pastikan forced USB3 mode */
+		amlogic,pcie-disable;    /* pastikan forced USB3 mode */
 	};
 
-/* KOREKSI: Mengganti &&usb menjadi &usb */
-&usb {
+        &usb {
 		status = "okay";
 		dr_mode = "host";
 		maximum-speed = "super-speed";
@@ -464,7 +459,7 @@
 	};
 
 	/* ───────────────────────────────────────────────
-	 * Root HUB (optional override)
+	 *  Root HUB (optional override)
 	 * ─────────────────────────────────────────────── */
 	&usb2 {
 		status = "okay";
@@ -510,9 +505,8 @@
 	max-frequency = <200000000>;
 	disable-wp;
 
-	/* KOREKSI: Diasumsikan Active LOW (normal pull-up) untuk Card Detect */
-	cd-gpios = <&gpio GPIOC_6 GPIO_ACTIVE_LOW>;
-	// cd-inverted; /* Dihapus karena sudah ACTIVE_LOW */
+	cd-gpios = <&gpio GPIOC_6 GPIO_ACTIVE_HIGH>;
+	cd-inverted;
 	vmmc-supply = <&vdd_3v3>;
 	vqmmc-supply = <&vdd_1v8>;
 };
