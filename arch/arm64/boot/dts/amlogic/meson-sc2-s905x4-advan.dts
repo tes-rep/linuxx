@@ -400,74 +400,33 @@
 	};
 }; /* end of periphs_pinctrl */
 
-/* ───────────────────────────────────────────────
-	 *  USB VBUS regulator (5V)
-	 * ─────────────────────────────────────────────── */
-	vusb_5v: regulator-vusb5v {
-		compatible = "regulator-fixed";
-		regulator-name = "vusb_5v";
-		regulator-min-microvolt = <5000000>;
-		regulator-max-microvolt = <5000000>;
-		gpio = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_HIGH>;
-		enable-active-high;
-		regulator-always-on;
-		regulator-boot-on;
-	};
+/* USB ROOT + QUIRKS */
+&usb {
+status = "okay";
+dr_mode = "host";
+maximum-speed = "super-speed";
+snps,dis_u2_susphy_quirk;
+snps,dis_enblslpm_quirk;
+snps,parkmode-disable-ss-quirk;
+};
 
-	/* ───────────────────────────────────────────────
-	 *  Disable PCIe — AX810/AT01 *tidak punya hardware*
-	 *  PCIe PHY aktif menyebabkan USB3 drop / connect-disconnect
-	 * ─────────────────────────────────────────────── */
-	&pcie_phy {
-		status = "disabled";
-	};
 
-	&pcie {
-		status = "disabled";
-	};
+&usb2_phy0 {
+status = "okay";
+phy-supply = <&vbus_pwr>;
+};
 
-/* ───────────────────────────────────────────────
-	 *  USB2 PHY
-	 * ─────────────────────────────────────────────── */
-	&usb2_phy0 {
-		phy-supply = <&vusb_5v>;
-		status = "okay";
-	};
 
-	/* USB2 port kedua jika ada */
-	&usb2_phy1 {
-		phy-supply = <&vusb_5v>;
-		status = "okay";
-	};
+&usb2_phy1 {
+status = "okay";
+phy-supply = <&vbus_pwr>;
+};
 
-	/* ───────────────────────────────────────────────
-	 *  USB3 / PCIe Combo PHY → hanya mode USB3
-	 * ─────────────────────────────────────────────── */
-	&usb3_pcie_phy {
-		status = "okay";
-		amlogic,pcie-disable;    /* pastikan forced USB3 mode */
-	};
 
-        &usb {
-		status = "okay";
-		dr_mode = "host";
-		maximum-speed = "super-speed";
-		snps,dis_u2_susphy_quirk;
-		snps,dis_enblslpm_quirk;
-		phys = <&usb2_phy0>, <&usb3_pcie_phy>;
-		phy-names = "usb2-phy", "usb3-phy";
-	};
-
-	/* ───────────────────────────────────────────────
-	 *  Root HUB (optional override)
-	 * ─────────────────────────────────────────────── */
-	&usb2 {
-		status = "okay";
-	};
-
-	&usb3 {
-		status = "okay";
-	};
+&usb3_pcie_phy {
+status = "okay";
+phy-supply = <&vbus_pwr>;
+};
 
 /* SDIO */
 &sd_emmc_a {
