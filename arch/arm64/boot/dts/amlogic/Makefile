@@ -100,6 +100,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-sm1-x96-air-gbit.dtb
 dtb-$(CONFIG_ARCH_MESON) += meson-sm1-x96-air.dtb
 dtb-$(CONFIG_ARCH_MESON) += meson-sc2-s905x4-ah212.dtb
 dtb-$(CONFIG_ARCH_MESON) += meson-sc2-s905x4-akari-ax810.dtb
+dtb-$(CONFIG_ARCH_MESON) += meson-sc2-s905x4-advan.dtb
 
 
 # Overlays
